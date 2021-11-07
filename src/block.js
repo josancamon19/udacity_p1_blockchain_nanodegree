@@ -24,6 +24,7 @@ class Block {
     }
 
     calculateBlockHash() {
+        this.hash = null
         this.hash = SHA256(JSON.stringify(this)).toString();
     }
 

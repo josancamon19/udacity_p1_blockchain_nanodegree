@@ -55,17 +55,28 @@ class Blockchain {
      */
     _addBlock(block) {
         let self = this;
-        return new Promise((resolve) => {
+        return new Promise(async (resolve, reject) => {
+            // Is chain valid before adding a new block
+            let errors = await this.validateChain();
+            if (errors.length > 0) {
+                reject(errors)
+            }
+
+            // Set block previous hash if is not Genesis
             if (self.height !== -1) {
                 block.previousBlockHash = self.chain[self.height].hash;
             }
+            // Set block, chain related data
             self.height++;
             block.height = self.height;
             block.time = Date.now().toString();
             block.calculateBlockHash();
+            // Add block to the chain
             self.chain.push(block);
+
             console.log("Adding block:")
             console.log(block);
+
             resolve(block)
         });
     }
